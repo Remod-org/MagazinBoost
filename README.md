@@ -1,4 +1,4 @@
-## MagazinBoost
+## MagazinBoost (Remod version)
 
 Current version 1.6.3: [Download](https://code.remod.org/MagazinBoost.cs)
 
