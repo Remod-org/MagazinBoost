@@ -1,6 +1,8 @@
 ## MagazinBoost
 
-Magazin Booster can change the most important values for any projectile Weapon. It works with custom changeable rights for the available properties and will get applied after "OnItemCraftFinished".
+Current version 1.6.3: [Download](https://code.remod.org/MagazinBoost.cs)
+
+Magazin Booster can change the most important values for any projectile Weapon. It works with custom changeable rights for the available properties and will get applied after "OnItemCraftFinished" or "OnReloadWeapon."
 
 Additionally it can change the default value's for maximum ammunition count and preloaded ammunition count for every weapon, which will be spawned on the server, either in boxes, by kits or also by give.
 
