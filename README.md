@@ -1,6 +1,6 @@
 ## MagazinBoost (Remod version)
 
-Current version 1.6.3: [Download](https://code.remod.org/MagazinBoost.cs)
+Current version 1.6.4: [Download](https://code.remod.org/MagazinBoost.cs)
 Thanks to the original author, Fujikura.
 
 Magazin Booster can change the most important values for any projectile Weapon. It works with custom changeable rights for the available properties and will get applied after "OnItemCraftFinished" or "OnReloadWeapon."
