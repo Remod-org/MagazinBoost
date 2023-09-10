@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Oxide.Plugins
 {
-    [Info("MagazinBoost", "Fujikura/RFC1920", "1.6.4", ResourceId = 1962)]
+    [Info("MagazinBoost", "Fujikura/RFC1920", "1.6.5", ResourceId = 1962)]
     [Description("Can change magazines, ammo and condition for most projectile weapons")]
     internal class MagazinBoost : RustPlugin
     {
@@ -126,11 +126,11 @@ namespace Oxide.Plugins
             return false;
         }
 
-        private void OnItemCraftFinished(ItemCraftTask task, Item item)
+		private void OnItemCraftFinished(ItemCraftTask task, Item item, ItemCrafter crafter)
         {
             if (configData.Debug) Puts("OnItemCraftFinished called!");
             if (!(item.GetHeldEntity() is BaseProjectile)) return;
-            if (!HasAnyRight(task.owner)) return;
+            if (!HasAnyRight(crafter.owner)) return;
             WeaponStats weaponStats = new WeaponStats();
             if (configData.Weapons.ContainsKey(item.info.shortname))
             {
@@ -141,20 +141,20 @@ namespace Oxide.Plugins
             BaseProjectile bp = item.GetHeldEntity() as BaseProjectile;
             if (bp != null)
             {
-                if (HasRight(task.owner, "maxammo") || HasRight(task.owner, "all"))
+                if (HasRight(crafter.owner, "maxammo") || HasRight(crafter.owner, "all"))
                 {
                     bp.primaryMagazine.capacity = weaponStats.maxammo;
                 }
-                if (HasRight(task.owner, "preload") || HasRight(task.owner, "all"))
+                if (HasRight(crafter.owner, "preload") || HasRight(crafter.owner, "all"))
                 {
                     bp.primaryMagazine.contents = weaponStats.preload;
                 }
-                if (HasRight(task.owner, "ammotype") || HasRight(task.owner, "all"))
+                if (HasRight(crafter.owner, "ammotype") || HasRight(crafter.owner, "all"))
                 {
                     ItemDefinition ammo = ItemManager.FindItemDefinition(weaponStats.ammotype);
                     if (ammo != null) bp.primaryMagazine.ammoType = ammo;
                 }
-                if (HasRight(task.owner, "maxcondition") || HasRight(task.owner, "all"))
+                if (HasRight(crafter.owner, "maxcondition") || HasRight(crafter.owner, "all"))
                 {
                     item._maxCondition = Convert.ToSingle(weaponStats.maxcondition);
                     item._condition = Convert.ToSingle(weaponStats.maxcondition);
