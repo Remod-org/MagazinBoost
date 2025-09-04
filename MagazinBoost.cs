@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Oxide.Plugins
 {
-    [Info("MagazinBoost", "Fujikura/RFC1920", "1.6.5", ResourceId = 1962)]
+    [Info("MagazinBoost", "Fujikura/RFC1920", "1.6.6", ResourceId = 1962)]
     [Description("Can change magazines, ammo and condition for most projectile weapons")]
     internal class MagazinBoost : RustPlugin
     {
@@ -126,7 +126,7 @@ namespace Oxide.Plugins
             return false;
         }
 
-		private void OnItemCraftFinished(ItemCraftTask task, Item item, ItemCrafter crafter)
+        private void OnItemCraftFinished(ItemCraftTask task, Item item, ItemCrafter crafter)
         {
             if (configData.Debug) Puts("OnItemCraftFinished called!");
             if (!(item.GetHeldEntity() is BaseProjectile)) return;
@@ -215,15 +215,15 @@ namespace Oxide.Plugins
         {
             IEnumerable<ItemDefinition> weapons = ItemManager.GetItemDefinitions().Where(p => p.category == ItemCategory.Weapon && p.GetComponent<ItemModEntity>() != null);
 
-            if (configData.Weapons.Count == 0)
+            if (configData?.Weapons?.Count == 0)
             {
                 int counter = 0;
                 foreach (ItemDefinition weapon in weapons)
                 {
-                    if (configData.Debug) Puts($"Processing new weapon {weapon.shortname}");
+                    if (configData.Debug) Puts($"Processing new weapon {weapon?.shortname}");
                     if (weapon.GetComponent<ItemModEntity>().entityPrefab.Get().GetComponent<BaseProjectile>() == null) continue;
 
-                    WeaponStats weaponStats = new WeaponStats()
+                    WeaponStats weaponStats = new()
                     {
                         displayname = weapon.displayName.english,
                         maxammo = weapon.GetComponent<ItemModEntity>().entityPrefab.Get().GetComponent<BaseProjectile>().primaryMagazine.definition.builtInSize,
@@ -250,23 +250,27 @@ namespace Oxide.Plugins
             }
             else
             {
-                if (configData.Weapons.Count > 0)
+                if (configData?.Weapons?.Count > 0)
                 {
                     int countLoadedServerStats = 0;
                     foreach (ItemDefinition weapon in weapons)
                     {
-                        if (!GameManifest.guidToPath.ContainsKey(weapon.GetComponent<ItemModEntity>().entityPrefab.guid) || weapon.GetComponent<ItemModEntity>().entityPrefab.Get().GetComponent<BaseProjectile>() == null) continue;
-                        if (configData.Weapons.ContainsKey(weapon.shortname))
+                        if (!GameManifest.guidToPath.ContainsKey(weapon?.GetComponent<ItemModEntity>()?.entityPrefab?.guid) || weapon?.GetComponent<ItemModEntity>()?.entityPrefab?.Get()?.GetComponent<BaseProjectile>() == null) continue;
+                        if (configData.Weapons.ContainsKey(weapon?.shortname))
                         {
-                            if (configData.Debug) Puts($"Processing existing weapon {weapon.shortname}");
-                            WeaponStats serverDefaults = configData.Weapons[weapon.shortname];
-                            if (serverDefaults.givemaxammo == 0)
+                            if (configData.Debug) Puts($"Processing existing weapon {weapon?.shortname}");
+                            WeaponStats serverDefaults = configData.Weapons[weapon?.shortname];
+                            if (serverDefaults?.givemaxammo == 0)
                             {
-                                serverDefaults.givemaxammo = serverDefaults.servermaxammo;
-                                serverDefaults.givepreload = serverDefaults.serverpreload;
-                                serverDefaults.giveammotype = serverDefaults.serverammotype;
-                                serverDefaults.givemaxcondition = serverDefaults.servermaxcondition;
-                                serverDefaults.skinid = 0;
+                                try
+                                {
+                                    serverDefaults.givemaxammo = serverDefaults.servermaxammo;
+                                    serverDefaults.givepreload = serverDefaults.serverpreload;
+                                    serverDefaults.giveammotype = serverDefaults.serverammotype;
+                                    serverDefaults.givemaxcondition = serverDefaults.servermaxcondition;
+                                    serverDefaults.skinid = 0;
+                                }
+                                catch { }
                             }
 
                             if (serverDefaults.serveractive)
@@ -411,7 +415,7 @@ namespace Oxide.Plugins
                     if (permission.UserHasPermission(player.UserIDString, configData.Permissions.permissionMaxAmmo)) { right = true; }
                     break;
                 case "preload":
-                    if (permission.UserHasPermission(player.UserIDString, configData.Permissions.permissionPreLoad)) {right = true;}
+                    if (permission.UserHasPermission(player.UserIDString, configData.Permissions.permissionPreLoad)) { right = true; }
                     break;
                 case "maxcondition":
                     if (permission.UserHasPermission(player.UserIDString, configData.Permissions.permissionMaxCondition)) { right = true; }
@@ -423,7 +427,7 @@ namespace Oxide.Plugins
             return right;
         }
         //static List<string> GetPlayerAmmo(BasePlayer player, string type=null)
-        private bool GetPlayerAmmo(BasePlayer player, string type=null)
+        private bool GetPlayerAmmo(BasePlayer player, string type = null)
         {
             foreach (Item item in player.inventory.containerMain.itemList)
             {
