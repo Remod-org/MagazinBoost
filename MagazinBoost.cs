@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Oxide.Plugins
 {
-    [Info("MagazinBoost", "Fujikura/RFC1920", "1.6.6", ResourceId = 1962)]
+    [Info("MagazinBoost", "Fujikura/RFC1920", "1.6.7", ResourceId = 1962)]
     [Description("Can change magazines, ammo and condition for most projectile weapons")]
     internal class MagazinBoost : RustPlugin
     {
@@ -169,6 +169,7 @@ namespace Oxide.Plugins
 
         private void OnItemAddedToContainer(ItemContainer container, Item item)
         {
+            if (container.entityOwner == null) return;
             if (!configData.CheckRights.checkPermission) return;
             if (item.GetHeldEntity() is BaseProjectile && container.HasFlag(ItemContainer.Flag.Belt))
             {
